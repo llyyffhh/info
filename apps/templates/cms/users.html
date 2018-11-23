@@ -1,0 +1,56 @@
+{% extends "cms/index.html" %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<table class="layui-table" lay-data="{width:900, url:'/cms/user_detail', page: true, limit: 6, limits:[6]}">
+  <thead>
+    <tr>
+      <th lay-data="{checkbox:true, fixed:'left'}" rowspan="2"></th>
+      <th lay-data="{field:'username', width:150}" rowspan="2">用户名</th>
+      <th lay-data="{align:'center'}" colspan="3">用户详情</th>
+{#      <th lay-data="{field:'amount', width:120}" rowspan="2">金额</th>#}
+      <th lay-data="{fixed: 'right', width: 160, align: 'center', toolbar: '#barDemo'}" rowspan="2">操作</th>
+    </tr>
+    <tr>
+      <th lay-data="{field:'name', width:120}">姓名</th>
+      <th lay-data="{field:'join_time', width:120}">加入时间</th>
+      <th lay-data="{field:'permission', width:200}">权限</th>
+    </tr>
+  </thead>
+</table>
+
+
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit" id="edit">修改</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete" id="delete">删除</a>
+</script>
+
+
+
+
+<script>
+layui.use('table', function(){
+  var table = layui.table;
+  table.on('lay-event(#delete)',function (obj) {
+      data = obj.data;
+      $.ajax({
+          type : "post",
+          url : 'del_user',
+          data : data,
+          dataType :"json",
+          success : function (msg) {
+              if(msg["code"]==200) {
+                  layer.alert(msg.msg)
+              }else{
+                  layer.alert(msg.msg)
+              }
+          }
+      })
+  })
+});
+
+
+</script>
+{% endblock %}

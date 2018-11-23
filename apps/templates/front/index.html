@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>包商村镇银行金山支行</title>
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='front/css/hui.css')}}" />
+</head>
+<body style="background:#FCFCFC;">
+<header class="hui-header">
+    <div id="hui-fr"></div>
+    <h1>客户信息问卷调查</h1>
+</header>
+<div class="hui-wrap">
+    <form style="padding:28px 10px;" class="hui-form" id="form1">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">您的名字</div>
+            <input type="text" class="hui-input hui-input-clear" name="name" placeholder="如：张三"  />
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">手机号码</div>
+            <input type="number" class="hui-input" placeholder="如：1889088..." name="phone_num" />
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">详细地址</div>
+            <input type="text" name="addr" class="hui-input hui-input-clear" placeholder="地址"/>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">年龄</div>
+            <input type="number" name="year" class="hui-input" placeholder="年龄" />
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">年收入</div>
+            <input type="number" name="money" class="hui-input" placeholder="单位：万元" />
+        </div>
+
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">职业</div>
+            <div class="hui-form-radios" style="line-height:38px;">
+                <input type="radio" value="企业职工" name="work" id="g1" onchange="showSelectRes(this);" /><label for="g1">企业职工</label><br />
+                <input type="radio" value="机关事业单位" name="work" id="g2" onchange="showSelectRes(this);" /><label for="g2">机关事业单位</label><br />
+                <input type="radio" value="工人" name="work" id="g3" onchange="showSelectRes(this);" /><label for="g3">工人</label><br />
+                <input type="radio" value="个体户" name="work" id="g4" onchange="showSelectRes(this);" /><label for="g4">个体户</label><br />
+                <input type="radio" value="其他" name="work" id="g5" onchange="showSelectRes(this);" /><label for="g5">其他</label>
+            </div>
+        </div>
+
+        <div class="hui-form-items">
+            <div>经常办理业务的银行</div>
+            <div class="hui-form-radios">
+                <input type="checkbox" value="工行" name="bank[]" id="c1" onchange="showCheckRes(this);" /><label for="c1">工行</label>
+                <input type="checkbox" value="建行" name="bank[]" id="c2" onchange="showCheckRes(this);" /><label for="c2">建行</label>
+                <input type="checkbox" value="中行" name="bank[]" id="c3" onchange="showCheckRes(this);" /><label for="c3">中行</label>
+                <input type="checkbox" value="农行" name="bank[]" id="c4" onchange="showCheckRes(this);" /><label for="c4">农行</label>
+                <input type="checkbox" value="中原银行" name="bank[]" id="c5" onchange="showCheckRes(this);" /><label for="c5">中原银行</label>
+                <input type="checkbox" value="信用社" name="bank[]" id="c6" onchange="showCheckRes(this);" /><label for="c6">信用社</label>
+                <input type="checkbox" value="邮政储蓄" name="bank[]" id="c7" onchange="showCheckRes(this);" /><label for="c7">邮政储蓄</label>
+                <input type="checkbox" value="民生银行" name="bank[]" id="c8" onchange="showCheckRes(this);" /><label for="c8">民生银行</label>
+                <input type="checkbox" value="郑州银行" name="bank[]" id="c9" onchange="showCheckRes(this);" /><label for="c9">郑州银行</label>
+
+            </div>
+        </div>
+
+
+        <div class="hui-form-items">
+            <div>是否为我行客户</div>
+            <div class="hui-form-select">
+                <select name="custom">
+                    <option value="是">是</option>
+                    <option value="否">否</option>
+
+                </select>
+            </div>
+        </div>
+
+        <div style="padding:15px 8px;">
+            <button type="button" class="hui-button hui-primary hui-fr" id="submitBtn">点击提交</button>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="{{url_for('static',filename='front/js/hui.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static',filename='front/js/hui-form.js')}}"></script>
+<script type="text/javascript">
+hui.formInit();
+//表单元素数据收集演示
+hui('#submitBtn').click(function(){
+    var data = hui.getFormData('#form1');
+    hui.confirm(
+        "确定提交吗？",
+        ["取消","确定"],
+        function () {
+            hui.postJSON(
+        '/submit_info',
+        data,
+        function (msg) {
+            if(msg["code"] == 200){
+                hui.iconToast(msg["msg"]);
+                document.getElementById("form1").reset();
+            }else{
+                hui.upToast(msg["msg"])
+            }
+        }
+    )
+        })
+
+
+
+
+});
+//获取复选框的值
+function showCheckRes(_selfBtn){
+    var vals = new Array();
+    hui(_selfBtn).parent().find('input').each(function(cObj){
+        if(cObj.checked){
+            vals.push(cObj.value);
+        }
+    });
+    console.log(vals);
+}
+//获取单选框的值
+function showSelectRes(_selfBtn){
+    var val;
+    hui(_selfBtn).parent().find('input').each(function(cObj){
+        if(cObj.checked){val = cObj.value;}
+    });
+    {#console.log(val);#}
+}
+
+var useragent = navigator.userAgent;
+    if (useragent.match(/MicroMessenger/i) != 'MicroMessenger') {
+        // 这里警告框会阻塞当前页面继续加载
+        alert('已禁止本次访问：您必须使用微信访问本页面！');
+        // 以下代码是用javascript强行关闭当前页面
+        var opened = window.open('about:blank', '_self');
+        opened.opener = null;
+        opened.close();
+    }
+</script>
+</body>
+</html>

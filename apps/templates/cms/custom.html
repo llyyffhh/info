@@ -1,0 +1,80 @@
+{% extends "cms/index.html" %}
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+<table class="layui-hide" id="test" lay-filter="test"></table>
+<input type="hidden" id="csrf" name="csrf_token" value="{{ csrf_token() }}">
+
+<script type="text/html" id="toolbarDemo">
+  <div class="layui-btn-container">
+
+    <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete">删除</button>
+  </div>
+</script>
+
+
+
+
+
+<script>
+layui.use('table', function(){
+  var table = layui.table;
+
+  table.render({
+    elem: '#test'
+    ,url:'custom_detail'
+    ,toolbar: '#toolbarDemo'
+    ,cols: [[
+      {type:'radio'}
+      ,{field:'id', width:70, title: 'ID', sort: true}
+      ,{field:'name', width:70, title: '姓名'}
+      ,{field:'phone_num', width:100, title: '电话'}
+      ,{field:'year', width:80, title: '年龄',sort:true}
+      ,{field:'addr', title: '地址', minWidth: 100,edit:'text'}
+      ,{field:'money', width:70, title: '收入', sort: true}
+      ,{field:'bank', width:100, title: '银行'}
+      ,{field:'work', width:70, title: '职业'}
+      ,{field:'custom', width:70, title: '客户'}
+      ,{field:'join_time', width:70, title: '时间',sort:true}
+    ]]
+    ,page: true
+      ,title : "用户信息"
+  });
+
+  //头工具栏事件
+ table.on('toolbar(test)', function(obj){
+     var csrf = document.getElementById("csrf").value;
+  var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+     var data = checkStatus.data;  //获取选中行数据
+     data[0]["csrf_token"] = csrf;
+    switch(obj.event){
+
+        case 'delete':
+            layer.confirm('确定删除此条记录吗？',function (index) {
+                $.ajax({
+            type : "post",
+            url : 'delete_custom',
+            dataType : 'json',
+            data : data[0],
+            success : function (msg) {
+                if(msg["code"]==200){
+                    layer.msg(msg.msg, {time:1000},function(){
+                    location.reload()
+    });
+                }else{
+                    layer.alert(msg.msg)
+                }
+            }
+
+        });
+                layer.close(index);
+            });
+
+           break
+    };
+  });
+});
+</script>
+{% endblock %}

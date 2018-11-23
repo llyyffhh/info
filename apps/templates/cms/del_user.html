@@ -1,0 +1,57 @@
+{% extends "cms/index.html"%}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<div>
+    <form action="" class="layui-form",id="del">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="layui-form-item">
+    <label class="layui-form-label" style="color: red">删除哪个？</label>
+    <div class="layui-input-block">
+      <select name="interest" lay-filter="aihao">
+        <option value=""></option>
+        {% for user in users %}
+            {% if user.permission != "管理员" %}
+            <option value="{{ user.username }}">{{ user.username }}</option>
+            {% endif %}
+        {% endfor %}
+
+      </select>
+    </div>
+  </div>
+    <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button type="button" class="layui-btn" lay-submit lay-filter="Del">确定</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+    </form>
+</div>
+    <script>
+    layui.use(['form','layer'],function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        form.on('submit(Del)',function (data) {
+            layer.confirm("确定删除吗？",function (index) {
+                $.ajax({
+                type : "post",
+                url : "del_user",
+                dataType : 'json',
+                data :data.field,
+                success :function (msg) {
+                    if(msg["code"]==200){
+                        layer.alert(msg.msg);
+                    }else{
+                        layer.alert(msg.msg);
+                    }
+        }
+    });
+                layer.close(index)
+            })
+     });
+        return false;
+    })
+    </script>
+{% endblock %}

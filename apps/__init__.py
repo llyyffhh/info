@@ -1,4 +1,6 @@
 import os
+import logging
+from logging.handlers import RotatingFileHandler
 import random
 from apps.setting import config
 import click
@@ -20,9 +22,18 @@ def create_app():
     csrf = CSRFProtect()
     csrf.init_app(app)
     register_bp(app)
+    register_logger(app)
     command(app)
-    return app
 
+    return app
+def register_logger(app):
+    app.logger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s-%(name)s-%(levelname)s-%(message)s')
+    file_handler = RotatingFileHandler('logs/info.log',maxBytes=10*1024*1024,backupCount=10)
+    file_handler.setFormatter(formatter)
+    file_handler.setLevel(logging.INFO)
+    if not app.debug:
+        app.logger.addHandler(file_handler)
 
 def register_bp(app):
     app.register_blueprint(front_bp)
@@ -59,4 +70,5 @@ def command(app):
             db.session.add(info)
         db.session.commit()
         click.echo('添加数据成功')
+
 

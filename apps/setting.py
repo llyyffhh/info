@@ -1,5 +1,5 @@
+import secrets
 import os
-
 class BaseConfig:
     JSON_AS_ASCII = False
 
@@ -11,7 +11,7 @@ class DevelopmentConfig(BaseConfig):
 class ProductionConfig(BaseConfig):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
-    SECRET_KEY = os.urandom(64)
+    SECRET_KEY = secrets.token_urlsafe(16)
 
 config = {
     'development':DevelopmentConfig,

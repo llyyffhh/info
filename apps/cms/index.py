@@ -41,4 +41,11 @@ def delete_custom():
     else:
         return Api.params_error(msg='无法删除')
 
+@bp.route('/search_data',methods=["POST"])
+@login_required
+def search_data():
+    limit = int(request.form.get('limit'))
+    page = int(request.form.get('page'))
+    key = request.form.get('data')
+    return Custom.custom_api(limit=limit,page=page,key=key)
 

@@ -4,14 +4,24 @@
 {% endblock %}
 
 {% block content %}
+    <div class="demoTable">
+
+  <div class="layui-inline">
+    <input class="layui-input" name="id" id="demoReload" autocomplete="off" placeholder="电话或姓名">
+  </div>
+  <button class="layui-btn" data-type="reload">搜索</button>
+</div>
+
 <table class="layui-hide" id="test" lay-filter="test"></table>
 <input type="hidden" id="csrf" name="csrf_token" value="{{ csrf_token() }}">
 
 <script type="text/html" id="toolbarDemo">
+
   <div class="layui-btn-container">
 
     <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete">删除</button>
   </div>
+
 </script>
 
 
@@ -28,20 +38,45 @@ layui.use('table', function(){
     ,toolbar: '#toolbarDemo'
     ,cols: [[
       {type:'radio'}
-      ,{field:'id', width:70, title: 'ID', sort: true}
-      ,{field:'name', width:70, title: '姓名'}
-      ,{field:'phone_num', width:100, title: '电话'}
-      ,{field:'year', width:80, title: '年龄',sort:true}
-      ,{field:'addr', title: '地址', minWidth: 100,edit:'text'}
-      ,{field:'money', width:70, title: '收入', sort: true}
-      ,{field:'bank', width:100, title: '银行'}
-      ,{field:'work', width:70, title: '职业'}
-      ,{field:'custom', width:70, title: '客户'}
-      ,{field:'join_time', width:70, title: '时间',sort:true}
+      ,{field:'id',  title: 'ID', sort: true}
+      ,{field:'name', title: '姓名'}
+      ,{field:'phone_num', title: '电话'}
+      ,{field:'year', title: '年龄',sort:true}
+      ,{field:'addr', title: '地址'}
+      ,{field:'money', title: '收入', sort: true}
+      ,{field:'bank', title: '银行'}
+      ,{field:'work', title: '职业'}
+      ,{field:'custom', title: '客户'}
+      ,{field:'gift', title: '礼品'}
+      ,{field:'join_time', title: '时间',sort:true}
     ]]
     ,page: true
       ,title : "用户信息"
   });
+  var $ = layui.$, active = {
+    reload: function(){
+      var demoReload = $('#demoReload');
+      var csrf_token = $('#csrf');
+      //执行重载
+      table.reload('test', {
+          url:'search_data',
+          method : 'post',
+        page: {
+          curr: 1 //重新从第 1 页开始
+        }
+        ,where: {
+            data: demoReload.val(),
+            csrf_token : csrf_token.val()
+        }
+      });
+    }
+  };
+
+  $('.demoTable .layui-btn').on('click', function(){
+    var type = $(this).data('type');
+    active[type] ? active[type].call(this) : '';
+  });
+
 
   //头工具栏事件
  table.on('toolbar(test)', function(obj){
@@ -73,8 +108,9 @@ layui.use('table', function(){
             });
 
            break
-    };
+    }
   });
 });
+
 </script>
 {% endblock %}

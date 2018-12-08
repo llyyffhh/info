@@ -24,8 +24,8 @@ def create_app():
     register_bp(app)
     register_logger(app)
     command(app)
-
     return app
+
 def register_logger(app):
     app.logger.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s-%(name)s-%(levelname)s-%(message)s')
@@ -34,6 +34,8 @@ def register_logger(app):
     file_handler.setLevel(logging.INFO)
     if not app.debug:
         app.logger.addHandler(file_handler)
+
+
 
 def register_bp(app):
     app.register_blueprint(front_bp)

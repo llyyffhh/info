@@ -94,11 +94,10 @@ hui('#submitBtn').click(function(){
         '/submit_info',
         data,
         function (msg) {
-            if(msg["code"] == 200){
-                hui.iconToast(msg["msg"]);
-                document.getElementById("form1").reset();
-            }else{
+            if(msg["code"] != 200){
                 hui.upToast(msg["msg"])
+            }else{
+                window.location.href = "gift?phone_num="+ data.phone_num
             }
         }
     )

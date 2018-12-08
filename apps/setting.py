@@ -2,6 +2,7 @@ import secrets
 import os
 class BaseConfig:
     JSON_AS_ASCII = False
+    GIFTS = ['礼品1','礼品2','礼品3','礼品4','礼品5']
 
 class DevelopmentConfig(BaseConfig):
     SQLALCHEMY_TRACK_MODIFICATIONS = False

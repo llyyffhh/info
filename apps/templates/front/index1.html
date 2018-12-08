@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{{ url_for('static',filename='front/img/favicon.ICO') }}" type="image/x-icon">
+    <title>包商村镇银行问卷调查</title>
+{#    <script href="{{ url_for('static',filename='cms/js/jquery.min.js') }}"></script>#}
+    <script src="{{ url_for('static',filename='front/js/jquery.js') }}"></script>
+    <style>
+    #bg{
+      position:fixed;
+      top: 0;
+      left: 0;
+      width:100%;
+      height:100%;
+      min-width: 1000px;
+      z-index:-10;
+      zoom: 1;
+      background-color: #fff;
+      background-repeat: no-repeat;
+      background-size: cover;
+      -webkit-background-size: cover;
+      -o-background-size: cover;
+      background-position: center 0;
+}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div id="bg" style="background-image:url(../static/front/img/index1.jpeg);"></div>
+
+</div>
+
+<script>
+    var strat,move,num; /*定义三个变量, 记录开始、结束距离顶部的距离*/
+
+     document.addEventListener("touchstart", function (e){        /*触摸开始*/
+
+            start = e.touches[0].pageY;
+                  /*得出刚触屏时距离页面顶部的距离*/
+
+      })
+
+     document.addEventListener("touchmove", function (e){       /*触摸移动*/
+
+            move = e.touches[0].pageY;
+               /*得出触屏结束后距离页面顶部的距离*/
+    })
+
+   document.addEventListener("touchend", function (e){            /*触摸结束*/
+
+            num = start - move ;   /*得出开始和结束距离页面顶部的差值*/
+
+            if(num>15){
+
+                 location.href="submit_info"           /* 跳转到main.html */
+            }
+    });
+    var useragent = navigator.userAgent;
+    if (useragent.match(/MicroMessenger/i) != 'MicroMessenger') {
+        // 这里警告框会阻塞当前页面继续加载
+        alert('已禁止本次访问：您必须使用微信访问本页面！');
+        // 以下代码是用javascript强行关闭当前页面
+        var opened = window.open('about:blank', '_self');
+        opened.opener = null;
+        opened.close();
+    }
+
+</script>
+</body>
+</html>
